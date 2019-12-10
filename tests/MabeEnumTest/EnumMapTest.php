@@ -19,7 +19,7 @@ use UnexpectedValueException;
  */
 class EnumMapTest extends TestCase
 {
-    public function testInstantiate()
+    public function testInstantiate(): void
     {
         $enum1  = EnumBasic::ONE();
         $value1 = 'value1';
@@ -27,6 +27,7 @@ class EnumMapTest extends TestCase
         $enum2  = EnumBasic::TWO();
         $value2 = 'value2';
 
+        /** @var callable(): iterable<EnumBasic, mixed> $loopInitializeMap */
         $loopInitializeMap = function () use ($enum1, $value1, $enum2, $value2): iterable {
             yield $enum1 => $value1;
             yield $enum2 => $value2;
@@ -38,7 +39,7 @@ class EnumMapTest extends TestCase
         $this->assertSame(2, $enumMap->count());
     }
 
-    public function testBasicAddRemoveEnumeratorInstances()
+    public function testBasicAddRemoveEnumeratorInstances(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
         $this->assertSame(EnumBasic::class, $enumMap->getEnumeration());
@@ -78,7 +79,7 @@ class EnumMapTest extends TestCase
         $this->assertSame([], $enumMap->getValues());
     }
 
-    public function testBasicAddRemoveEnumeratorValues()
+    public function testBasicAddRemoveEnumeratorValues(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
 
@@ -117,7 +118,7 @@ class EnumMapTest extends TestCase
         $this->assertSame([], $enumMap->getValues());
     }
 
-    public function testBasicWithWithoutEnumeratorValues()
+    public function testBasicWithWithoutEnumeratorValues(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
 
@@ -156,7 +157,7 @@ class EnumMapTest extends TestCase
         $this->assertSame([], $enumMap->getValues());
     }
 
-    public function testBasicAddRemoveIterable()
+    public function testBasicAddRemoveIterable(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
 
@@ -170,7 +171,7 @@ class EnumMapTest extends TestCase
             yield $enum1 => $value1;
             yield $enum2 => $value2;
         };
-        $loopKeys = function () use ($enum1, $value1, $enum2, $value2): iterable {
+        $loopKeys = function () use ($enum1, $enum2): iterable {
             yield $enum1;
             yield $enum2;
         };
@@ -187,7 +188,7 @@ class EnumMapTest extends TestCase
         $this->assertSame([], $enumMap->getValues());
     }
 
-    public function testBasicWithWithoutIterable()
+    public function testBasicWithWithoutIterable(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
 
@@ -201,7 +202,7 @@ class EnumMapTest extends TestCase
             yield $enum1 => $value1;
             yield $enum2 => $value2;
         };
-        $loopKeys = function () use ($enum1, $value1, $enum2, $value2): iterable {
+        $loopKeys = function () use ($enum1, $enum2): iterable {
             yield $enum1;
             yield $enum2;
         };
@@ -218,7 +219,7 @@ class EnumMapTest extends TestCase
         $this->assertSame([], $enumMap->getValues());
     }
 
-    public function testGetMissingKeyThrowException()
+    public function testGetMissingKeyThrowException(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
 
@@ -226,7 +227,7 @@ class EnumMapTest extends TestCase
         $enumMap->get(EnumBasic::ONE);
     }
 
-    public function testIterate()
+    public function testIterate(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
 
@@ -266,13 +267,13 @@ class EnumMapTest extends TestCase
         $this->assertSame(null, $it->key());
     }
 
-    public function testArrayAccessOffsetGetMissingKeyReturnsNull()
+    public function testArrayAccessOffsetGetMissingKeyReturnsNull(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
         $this->assertNull($enumMap->offsetGet(EnumBasic::ONE));
     }
 
-    public function testArrayAccessWithObjects()
+    public function testArrayAccessWithObjects(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
 
@@ -291,7 +292,7 @@ class EnumMapTest extends TestCase
         $this->assertFalse(isset($enumMap[EnumBasic::TWO()]));
     }
 
-    public function testArrayAccessWithValues()
+    public function testArrayAccessWithValues(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
 
@@ -310,7 +311,7 @@ class EnumMapTest extends TestCase
         $this->assertFalse(isset($enumMap[EnumBasic::TWO]));
     }
 
-    public function testArrayAccessOffsetSetThrowsInvalidArgumentExceptionOnInvalidEnumerator()
+    public function testArrayAccessOffsetSetThrowsInvalidArgumentExceptionOnInvalidEnumerator(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
 
@@ -318,13 +319,13 @@ class EnumMapTest extends TestCase
         $enumMap->offsetSet(EnumInheritance::INHERITANCE(), 'test');
     }
 
-    public function testConstructThrowsInvalidArgumentExceptionIfEnumClassDoesNotExtendBaseEnum()
+    public function testConstructThrowsInvalidArgumentExceptionIfEnumClassDoesNotExtendBaseEnum(): void
     {
         $this->expectException(InvalidArgumentException::class);
         new EnumMap('stdClass');
     }
 
-    public function testContainsAndOffsetExistsReturnsFalseOnInvalidEnumerator()
+    public function testContainsAndOffsetExistsReturnsFalseOnInvalidEnumerator(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
 
@@ -335,7 +336,7 @@ class EnumMapTest extends TestCase
         $this->assertFalse(isset($enumMap[EnumInheritance::INHERITANCE]));
     }
 
-    public function testSearch()
+    public function testSearch(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
         $enumMap[EnumBasic::TWO()] = '2';
@@ -351,7 +352,7 @@ class EnumMapTest extends TestCase
         $this->assertNull($enumMap->search('unknown'));
     }
 
-    public function testSearchStrict()
+    public function testSearchStrict(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
         $enumMap[EnumBasic::TWO()] = '2';
@@ -367,7 +368,7 @@ class EnumMapTest extends TestCase
         $this->assertNull($enumMap->search('unknown', true));
     }
 
-    public function testNullValue()
+    public function testNullValue(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
         $enumMap[EnumBasic::ONE()] = null;
@@ -463,7 +464,7 @@ class EnumMapTest extends TestCase
         $this->assertFalse($enumMap->has(EnumBasic::THREE()));
     }
 
-    public function testSerializable()
+    public function testSerializable(): void
     {
         $enumMap = new EnumMap(EnumBasic::class);
         $enumMap[EnumBasic::ONE()] = 'one';
@@ -473,10 +474,12 @@ class EnumMapTest extends TestCase
         $this->assertFalse($enumMapCopy->offsetExists(EnumBasic::TWO));
     }
 
-    public function testIsEmpty()
+    public function testIsEmpty(): void
     {
+        /** @var array<int, string> $items2 */
+        $items2 = array_combine(Enum32::getValues(), Enum32::getNames());
         $map1 = new EnumMap(Enum32::class, []);
-        $map2 = new EnumMap(Enum32::class, array_combine(Enum32::getValues(), Enum32::getNames()));
+        $map2 = new EnumMap(Enum32::class, $items2);
 
         $this->assertTrue($map1->isEmpty());
         $this->assertFalse($map2->isEmpty());
@@ -490,7 +493,7 @@ class EnumMapTest extends TestCase
 
     /* deprecated */
 
-    public function testContains()
+    public function testContains(): void
     {
         $set = new EnumMap(EnumBasic::class, [EnumBasic::ONE => '1']);
 
